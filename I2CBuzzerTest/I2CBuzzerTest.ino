@@ -12,8 +12,9 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 
-#define RX    2   // *** D3, Pin 2
-#define TX    3   // *** D4, Pin 3
+#define  RX    2   // *** D3, Pin 2
+#define  TX    3   // *** D4, Pin 3
+
 #define  SEND_FREQUENCE    0x00
 #define  SEND_UP_BARRIER   0x01
 #define  SEND_DOWN_BARRIER 0x02
@@ -31,9 +32,6 @@ void setup() {
   wire_.begin(); // join i2c bus (address optional for master)
   Serial.begin(9600);
   mySerial.begin(1200);
-
-  // Enable debug
-  sendData(SEND_DEBUG_ON, 0x00000001);
 }
 
 void sendData(uint8_t type, uint32_t data) {
@@ -54,36 +52,71 @@ void sendData(uint8_t type, uint32_t data) {
     wire_.endTransmission(); 
 }
 
+void usage() {
+    Serial.println("Unknown Command: use");
+    Serial.println("\t-dbg=1|-dbg=0");
+    Serial.println("\t-beep=0,1,2,3,4,5");
+    Serial.println("\t[|-up=|-down=]Frequence");
+    Serial.println("\tfrom 800 until 8000");
+}
+
+bool hasPrefix(String &str, char *prefix) {
+  bool rv = str.substring(0,strlen(prefix)).equalsIgnoreCase(prefix);
+  return rv;
+}
+
+uint32_t getValueForPrefix(String &str, char *prefix){
+  uint32_t value = atoi(str.substring(strlen(prefix)).c_str());
+  return value;
+}
+
+bool inRange(uint32_t value, uint32_t down, uint32_t up) {
+  return (value >= down) && (value <= up); 
+}
+
+#define PRINT_AND_SEND(x,y) {Serial.print(#x);Serial.print(": ");Serial.println(y);sendData(x,y);}
+
 void loop() {
  while (Serial.available() > 0 ) {
      String str = Serial.readString();
+     str.trim();
      Serial.println(str);
-     if(str.substring(0,6).equalsIgnoreCase("-dbg=1")) {
-        Serial.println("Debug ON");
-        sendData(SEND_DEBUG_ON,0x00000001);
-     } else if(str.substring(0,6).equalsIgnoreCase("-dbg=0")) {
-        Serial.println("Debug OFF");
-        sendData(SEND_DEBUG_ON,0x00000000);
-     } else if(str.substring(0,7).equalsIgnoreCase("-beep=1")) {
-        Serial.println("Beep ON");
-        sendData(SEND_BEEP_ON,0x00000001);
-     } else if(str.substring(0,7).equalsIgnoreCase("-beep=0")) {
-        Serial.println("Beep OFF");
-        sendData(SEND_BEEP_ON,0x00000000);
+     if(hasPrefix(str, "-dbg=")) {
+        uint32_t value = getValueForPrefix(str, "-dbg=");
+        if(inRange(value, 0, 1)) {
+          PRINT_AND_SEND(SEND_DEBUG_ON,value);
+        } else {
+          usage();
+        }
+     } else if(hasPrefix(str, "-beep=")) {
+        uint32_t value = getValueForPrefix(str, "-beep=");
+        if(inRange(value, 0, 5)) {
+          PRINT_AND_SEND(SEND_BEEP_ON,value);
+        } else {
+          usage();
+        }
+     } else if(hasPrefix(str, "-up=")) {
+        uint32_t value = getValueForPrefix(str, "-up=");
+        if(inRange(value, 400, 8000)) {
+          PRINT_AND_SEND(SEND_UP_BARRIER,value);
+        } else {
+          usage();
+        }
+     } else if(hasPrefix(str, "-down=")) {
+        uint32_t value = getValueForPrefix(str, "-down=");
+        if(inRange(value, 400, 8000)) {
+          PRINT_AND_SEND(SEND_DOWN_BARRIER,value);
+        } else {
+          usage();
+        }
      } else {
-       uint32_t freq = atoi(str.c_str());
-       if(freq >= 500 && freq <= 8000) {
-          Serial.print("Send frequence: ");
-          Serial.println(freq);
-          sendData(SEND_FREQUENCE, freq);
-       } else {
-          Serial.println("Unknown Command: use");
-          Serial.println("\t-dbg=1|-dbg=0");
-          Serial.println("\t-beep=0,1,2,3,4,5");
-          Serial.println("or Frequence:"); 
-          Serial.println("\tfrom 800 until 8000");
-       }
-     }
+        uint32_t value = getValueForPrefix(str, "");
+        if(inRange(value, 400, 8000)) {
+          PRINT_AND_SEND(SEND_FREQUENCE,value);
+        } else {
+          usage();
+        }
+     }     
    }
    while (mySerial.available() > 0 ) {
       Serial.write(mySerial.read());

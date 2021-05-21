@@ -1,16 +1,6 @@
-// Test code for Adafruit GPS modules using MTK3329/MTK3339 driver
-//
-// This code shows how to listen to the GPS module in an interrupt
-// which allows the program to have more 'freedom' - just parse
-// when a new NMEA sentence is available! Then access data when
-// desired.
-//
-// Tested and works great with the Adafruit Ultimate GPS module
-// using MTK33x9 chipset
-//    ------> http://www.adafruit.com/products/746
-// Pick one up today at the Adafruit electronics shop
-// and help support open source hardware & software! -ada
-
+/**
+ * I2C Buzzer Code
+ */
 #include <TinyWireS.h>
 #include <SoftwareSerial.h>
 #include "TinyTone.h"
@@ -36,6 +26,7 @@ TinyTone tinyTone(mySerial, BEEP_PIN);
 #define  RCV_DOWN_BARRIER       0x02
 #define  RCV_BEEP_ON            0x03
 #define  RCV_DEBUG_ON           0x04
+
 
 #define  INVALID_UNIT32 0xFFFFFFFF
 

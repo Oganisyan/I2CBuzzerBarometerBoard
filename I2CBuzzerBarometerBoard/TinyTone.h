@@ -17,11 +17,12 @@ class TinyTone {
   Stream        &debug_;
   uint32_t      time_;
   int           pin_;
-  int           beepLevel_;
+  
+  uint8_t       beepLevel_;
   bool          debugOn_;
-
   uint32_t      freqenceUpBarrier_;
   uint32_t      freqenceDownBarrier_;
+
   uint32_t      freqence_; 
   
   int16_t       ddsAcc_;
