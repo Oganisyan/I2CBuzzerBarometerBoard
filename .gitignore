@@ -1,0 +1,6 @@
+/*/.gitignore
+**/.cproject
+**/.project
+**/.settings/
+**/Release/
+**/spec.d
