@@ -2,6 +2,8 @@
 **/.cproject
 **/.project
 **/.settings/
+**/core/
+**/libraries/
 **/Release/
 **/spec.d
 **/sloeber.ino.cpp
