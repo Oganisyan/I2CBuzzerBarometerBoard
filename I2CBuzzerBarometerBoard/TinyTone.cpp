@@ -18,7 +18,7 @@ TinyTone::TinyTone(Stream &debug, int pin) :
     debug_(debug), pin_(pin), beepLevel_(myEprom.getBeepLevel()), debugOn_(
         myEprom.isDebugOn()), time_(millis() + 1000), freqenceUpBarrier_(
         myEprom.getFreqenceUpBarrier()), freqenceDownBarrier_(
-        myEprom.getFreqenceDownBarrier()), freqence_(0), rawFreq_(0), octave_(0) {
+        myEprom.getFreqenceDownBarrier()), freqence_(0), rawFreq_(0), octave_(0), ddsAcc_(0) {
 }
 
 void TinyTone::begin() {
