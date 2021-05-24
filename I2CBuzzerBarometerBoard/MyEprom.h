@@ -2,10 +2,18 @@
 #define _MY_EPROM_H_
 #include <Arduino.h>
 
+#define MIN_FREQUENCE 128
+#define MAX_FREQUENCE 4095
+
+
 #define IDX_BEEP     0  // uint8_t
 #define IDX_DEBUG    1  // uint8_t
-#define IDX_DW_BARR  2  // uint16_t 400-8000
-#define IDX_UP_BARR  4  // uint16_t 400-8000
+#define IDX_DW_BARR  2  // uint16_t MIN_FREQUENCE - MAX_FREQUENCE
+#define IDX_UP_BARR  4  // uint16_t MIN_FREQUENCE - MAX_FREQUENCE
+
+#define inRange(amt,low,high) ((amt < low || amt > high)  ? false: true)
+
+
 
 class MyEprom {
   public:

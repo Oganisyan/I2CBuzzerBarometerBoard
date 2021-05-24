@@ -32,23 +32,23 @@ void     MyEprom::setDebugOn(bool debugOn){
 uint32_t MyEprom::getFreqenceUpBarrier(){
   uint16_t rv = 0;
   rv = EEPROM.get(IDX_UP_BARR, rv);
-  if(rv < 400 || rv > 8000 ) rv = 2750;
+  if(!inRange(rv, MIN_FREQUENCE, MAX_FREQUENCE )) rv = 1200;
   return (uint32_t) rv;
 }
 
 void     MyEprom::setFreqenceUpBarrier(uint32_t barrier){
-  uint16_t rv = constrain( barrier, 400, 8000);
+  uint16_t rv = constrain( barrier, 128, 4095);
   EEPROM.put(IDX_UP_BARR, rv);
 }
 
 uint32_t MyEprom::getFreqenceDownBarrier(){
   uint16_t rv = 0;
   rv = EEPROM.get(IDX_DW_BARR, rv);
-  if(rv < 400 || rv > 8000 ) rv = 2250;
+  if(!inRange(rv, MIN_FREQUENCE, MAX_FREQUENCE )) rv = 800;
   return (uint32_t) rv;
 }
 
 void     MyEprom::setFreqenceDownBarrier(uint32_t barrier){
-  uint16_t rv = constrain( barrier, 400, 8000);
+  uint16_t rv = constrain( barrier, 128, 4095);
   EEPROM.put(IDX_DW_BARR, rv);
 }

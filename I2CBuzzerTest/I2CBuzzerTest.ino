@@ -57,15 +57,15 @@ void usage() {
     Serial.println("\t-dbg=1|-dbg=0");
     Serial.println("\t-beep=0,1,2,3,4,5");
     Serial.println("\t[|-up=|-down=]Frequence");
-    Serial.println("\tfrom 800 until 8000");
+    Serial.println("\tfrom 128 until 4095");
 }
 
-bool hasPrefix(String &str, char *prefix) {
+bool hasPrefix(const String &str, const char *prefix) {
   bool rv = str.substring(0,strlen(prefix)).equalsIgnoreCase(prefix);
   return rv;
 }
 
-uint32_t getValueForPrefix(String &str, char *prefix){
+uint32_t getValueForPrefix(const String &str, const char *prefix){
   uint32_t value = atoi(str.substring(strlen(prefix)).c_str());
   return value;
 }
@@ -97,21 +97,21 @@ void loop() {
         }
      } else if(hasPrefix(str, "-up=")) {
         uint32_t value = getValueForPrefix(str, "-up=");
-        if(inRange(value, 400, 8000)) {
+        if(inRange(value, 128, 4095)) {
           PRINT_AND_SEND(SEND_UP_BARRIER,value);
         } else {
           usage();
         }
      } else if(hasPrefix(str, "-down=")) {
         uint32_t value = getValueForPrefix(str, "-down=");
-        if(inRange(value, 400, 8000)) {
+        if(inRange(value, 128, 4095)) {
           PRINT_AND_SEND(SEND_DOWN_BARRIER,value);
         } else {
           usage();
         }
      } else {
         uint32_t value = getValueForPrefix(str, "");
-        if(inRange(value, 400, 8000)) {
+        if(inRange(value, 128, 4095)) {
           PRINT_AND_SEND(SEND_FREQUENCE,value);
         } else {
           usage();
